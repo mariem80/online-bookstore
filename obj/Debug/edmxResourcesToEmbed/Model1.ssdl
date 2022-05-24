@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Database1Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="book">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="title" Type="nchar" MaxLength="35" />
+    <Property Name="price" Type="int" />
+    <Property Name="author" Type="nchar" MaxLength="20" />
+    <Property Name="about" Type="nvarchar(max)" />
+    <Property Name="Genre" Type="nchar" MaxLength="10" />
+    <Property Name="quantity" Type="int" />
+    <Property Name="image" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="orders">
+    <Key>
+      <PropertyRef Name="order_no" />
+    </Key>
+    <Property Name="order_no" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="user_name" Type="nchar" MaxLength="20" />
+    <Property Name="book_id" Type="int" />
+  </EntityType>
+  <EntityType Name="userdata">
+    <Key>
+      <PropertyRef Name="username" />
+    </Key>
+    <Property Name="username" Type="nchar" MaxLength="20" Nullable="false" />
+    <Property Name="password" Type="nchar" MaxLength="20" />
+    <Property Name="email" Type="nchar" MaxLength="30" />
+    <Property Name="address" Type="nchar" MaxLength="40" />
+    <Property Name="phone" Type="bigint" />
+  </EntityType>
+  <Association Name="FK_orders_ToTable">
+    <End Role="userdata" Type="Self.userdata" Multiplicity="0..1" />
+    <End Role="orders" Type="Self.orders" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="userdata">
+        <PropertyRef Name="username" />
+      </Principal>
+      <Dependent Role="orders">
+        <PropertyRef Name="user_name" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_orders_ToTable_1">
+    <End Role="book" Type="Self.book" Multiplicity="0..1" />
+    <End Role="orders" Type="Self.orders" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="book">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="orders">
+        <PropertyRef Name="book_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="Database1ModelStoreContainer">
+    <EntitySet Name="book" EntityType="Self.book" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="orders" EntityType="Self.orders" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="userdata" EntityType="Self.userdata" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_orders_ToTable" Association="Self.FK_orders_ToTable">
+      <End Role="userdata" EntitySet="userdata" />
+      <End Role="orders" EntitySet="orders" />
+    </AssociationSet>
+    <AssociationSet Name="FK_orders_ToTable_1" Association="Self.FK_orders_ToTable_1">
+      <End Role="book" EntitySet="book" />
+      <End Role="orders" EntitySet="orders" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

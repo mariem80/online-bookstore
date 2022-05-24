@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Database1Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="book">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="title" Type="String" MaxLength="35" FixedLength="true" Unicode="true" />
+    <Property Name="price" Type="Int32" />
+    <Property Name="author" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+    <Property Name="about" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Genre" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="quantity" Type="Int32" />
+    <Property Name="image" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="orders" Relationship="Self.FK_orders_ToTable_1" FromRole="book" ToRole="orders" />
+  </EntityType>
+  <EntityType Name="order">
+    <Key>
+      <PropertyRef Name="order_no" />
+    </Key>
+    <Property Name="order_no" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="user_name" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+    <Property Name="book_id" Type="Int32" />
+    <NavigationProperty Name="book" Relationship="Self.FK_orders_ToTable_1" FromRole="orders" ToRole="book" />
+    <NavigationProperty Name="userdata" Relationship="Self.FK_orders_ToTable" FromRole="orders" ToRole="userdata" />
+  </EntityType>
+  <EntityType Name="userdata">
+    <Key>
+      <PropertyRef Name="username" />
+    </Key>
+    <Property Name="username" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="password" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+    <Property Name="email" Type="String" MaxLength="30" FixedLength="true" Unicode="true" />
+    <Property Name="address" Type="String" MaxLength="40" FixedLength="true" Unicode="true" />
+    <Property Name="phone" Type="Int64" />
+    <NavigationProperty Name="orders" Relationship="Self.FK_orders_ToTable" FromRole="userdata" ToRole="orders" />
+  </EntityType>
+  <Association Name="FK_orders_ToTable_1">
+    <End Role="book" Type="Self.book" Multiplicity="0..1" />
+    <End Role="orders" Type="Self.order" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="book">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="orders">
+        <PropertyRef Name="book_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_orders_ToTable">
+    <End Role="userdata" Type="Self.userdata" Multiplicity="0..1" />
+    <End Role="orders" Type="Self.order" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="userdata">
+        <PropertyRef Name="username" />
+      </Principal>
+      <Dependent Role="orders">
+        <PropertyRef Name="user_name" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="Database1Entities1" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="books" EntityType="Self.book" />
+    <EntitySet Name="orders" EntityType="Self.order" />
+    <EntitySet Name="userdatas" EntityType="Self.userdata" />
+    <AssociationSet Name="FK_orders_ToTable_1" Association="Self.FK_orders_ToTable_1">
+      <End Role="book" EntitySet="books" />
+      <End Role="orders" EntitySet="orders" />
+    </AssociationSet>
+    <AssociationSet Name="FK_orders_ToTable" Association="Self.FK_orders_ToTable">
+      <End Role="userdata" EntitySet="userdatas" />
+      <End Role="orders" EntitySet="orders" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
